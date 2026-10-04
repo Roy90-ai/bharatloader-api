@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BharatLoader - Shorts & Reels Downloader</title>
+    <style>
+        body { background-color: #0c0d12 !important; color: #f1f5f9 !important; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 0; }
+        main { max-width: 800px; margin: 50px auto; padding: 20px; text-align: center; }
+        h1 { font-size: 2.8rem; font-weight: 800; color: #ffffff; margin-bottom: 10px; background: linear-gradient(to right, #ff7b00, #ffae00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        p { color: #94a3b8; font-size: 1rem; margin-bottom: 30px; }
+        input[type="text"] { width: 65%; background-color: #161923; border: 2px solid #2d3142; border-radius: 12px; padding: 14px 20px; color: #ffffff; font-size: 0.95rem; outline: none; }
+        button { background: linear-gradient(135deg, #ff7b00, #ff5100); color: white; font-weight: 700; padding: 14px 28px; border-radius: 12px; border: none; cursor: pointer; margin-left: 10px; font-size: 0.95rem; }
+        .hidden { display: none !important; }
+        .badge-container { margin-top: 40px; background-color: #11131c; padding: 20px; border-radius: 16px; border: 1px solid #1e2230; }
+        .badge-title { font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
+        span { display: inline-block; background-color: #1a1d29; border: 1px solid #2d3142; padding: 8px 16px; border-radius: 10px; margin: 5px; font-size: 0.85rem; color: #cbd5e1; }
+        #resultCardIndia { background-color: #161923; border: 2px solid #25293c; border-radius: 16px; padding: 20px; margin-top: 30px; text-align: left; display: flex; align-items: center; gap: 20px; }
+        #resThumbnailIndia { width: 180px; height: 110px; border-radius: 10px; object-fit: cover; }
+        #downloadBtnIndia { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 12px 24px; text-decoration: none; display: inline-block; border-radius: 8px; font-weight: bold; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 5, 8, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; }
+        .modal-box { background: #161923; border: 2px solid #2d3142; border-radius: 16px; padding: 30px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .checkbox-row { display: flex; align-items: center; justify-content: center; gap: 12px; margin: 20px 0; font-size: 1.1rem; }
+        .spinner { border: 4px solid rgba(255,123,0,0.1); width: 24px; height: 24px; border-radius: 50%; border-left-color: #ff7b00; animation: spin 1s linear infinite; display: inline-block; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        * { box-sizing: border-box; }
+        .input-container { display: flex; gap: 10px; }
+        .input-container input { flex: 1; min-width: 0; }
+        .input-container button { margin-left: 0; }
+        .url-entry { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0; }
+        .url-entry input[type="text"] { width: 100%; }
+        .paste-button { flex-shrink: 0; background: #1e2230; border: 1px solid #353b50; border-radius: 12px; color: #dce3ef; padding: 13px 16px; font-size: .85rem; white-space: nowrap; transition: background .15s, border-color .15s; }
+        .paste-button:hover { background: #292e40; border-color: #ff7b00; }
+        .paste-button:focus-visible { outline: 2px solid #ff7b00; outline-offset: 3px; }
+        #clipboardStatusIndia { margin: 10px 0 0; color: #94a3b8; font-size: .85rem; line-height: 1.5; }
+        button:disabled { opacity: .6; cursor: wait; }
+        #errorIndia { color: #ffb39b; line-height: 1.6; margin-top: 20px; overflow-wrap: anywhere; }
+        @media(max-width:600px) { .input-container { flex-direction: column; } .input-container input { width: 100%; } #resultCardIndia { flex-direction: column; align-items: stretch; } #resThumbnailIndia { width: 100%; height: 180px; } .modal-box { width: calc(100% - 36px); padding: 24px; } }
+        @media(prefers-reduced-motion:reduce) { .spinner { animation:none; } }
+        html{scroll-behavior:smooth;color-scheme:dark}body{min-height:100vh;display:flex;flex-direction:column;background-image:radial-gradient(ellipse at 50% 10%,#ff7b000a,transparent 55%)}
+        .corporate-header{width:100%;max-width:1140px;margin:auto;padding:26px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #252936;gap:16px}
+        .header-brand{font-size:23px;font-weight:800;letter-spacing:-.8px;text-decoration:none;background:linear-gradient(100deg,#ff7b00,#ffbb52);background-clip:text;color:transparent;filter:drop-shadow(0 0 15px #ff7b0022)}
+        .header-nav{display:flex;align-items:center;gap:20px}.header-nav a{color:#b5bed0;text-decoration:none;font-size:13px}.header-nav a:hover{color:#ffae55}.header-nav button{margin:0;background:#161923;padding:8px 10px;border:1px solid #2d3142;font-size:17px}.language-select{background:#161923;border:1px solid #2d3142;border-radius:9px;color:#cbd5e1;padding:9px;font:inherit;font-size:12px}
+        main{max-width:880px;width:100%;margin:55px auto 30px;flex:1}h1{font-size:clamp(36px,6vw,54px);letter-spacing:-1.5px}.hero-kicker{color:#ffb27a;font-size:11px;letter-spacing:2px;text-transform:uppercase;margin-bottom:18px}.hero-intro{line-height:1.8;max-width:560px;margin:0 auto 30px}
+        .community-panel{margin-top:28px;padding:25px;background:linear-gradient(135deg,#171b25,#11131c);border:1px solid #2b3041;border-radius:20px;text-align:left}.community-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.community-panel h2{font-size:17px;letter-spacing:-.3px;margin:0}.community-panel .panel-note{font-size:11px;line-height:1.7;margin:12px 0 16px;color:#8391a8}.community-panel .demo-tag{padding:5px 8px;border-radius:6px;margin:0;font-size:9px;letter-spacing:1px;background:#ff7b0010;color:#ffb47c;border-color:#ff7b0025;white-space:nowrap}.platform-status{display:flex;flex-wrap:wrap;gap:8px}.platform-status span{margin:0;border-radius:30px;padding:9px 12px;font-size:11px;background:#10b98109;border-color:#10b98130;color:#a3d6c3}.review-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:20px}.review-card{padding:18px;border:1px solid #292f3f;background:#0d1018;border-radius:14px}.review-card p{color:#c6cddc;font-size:12px;line-height:1.8;margin:9px 0 12px}.review-card .review-stars{font-size:12px;color:#ffb651}.review-card small{color:#78879e;font-size:10px}.faq-sheet{text-align:left;margin-top:45px}.faq-sheet h2{font-size:23px;letter-spacing:-.7px}.faq-sheet details{border-bottom:1px solid #2b3041;padding:18px 0}.faq-sheet summary{cursor:pointer;color:#d7ddea;font-size:14px}.faq-sheet details p{font-size:13px;line-height:1.8;margin:13px 0 0}.site-footer{max-width:1140px;width:100%;margin:auto;border-top:1px solid #252936;padding:25px 28px;display:flex;justify-content:space-between;gap:18px;align-items:center;color:#7a889e;font-size:11px}.footer-links{display:flex;gap:22px;flex-wrap:wrap}.footer-links a{color:#aab6c9;text-decoration:none}.footer-links a:hover{color:#ffae55}
+        .legal-dialog{border:1px solid #393f52;border-radius:22px;padding:30px;background:#161923;color:#f1f5f9;max-width:550px;width:calc(100% - 36px);box-shadow:0 30px 100px #0009}.legal-dialog::backdrop{background:#050508d9;backdrop-filter:blur(8px)}.legal-dialog[open]{animation:legalAppear .2s ease-out}.legal-dialog h2{font-size:23px;margin:0 0 15px}.legal-dialog p{font-size:13px;line-height:1.9;margin:0 0 18px}.legal-dialog .legal-label{font-size:10px;letter-spacing:1.5px;color:#ffb477;margin-bottom:12px}.legal-dialog button{margin:0;padding:12px 22px;font-size:13px}.legal-dialog .legal-subtle{font-size:11px;color:#7b89a0}@keyframes legalAppear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+        body.light-theme{background-color:#f5f6fa!important;color:#182036!important;background-image:none}body.light-theme p{color:#59667d}body.light-theme .corporate-header,body.light-theme .site-footer{border-color:#d9dfeb}body.light-theme .community-panel,body.light-theme .badge-container,body.light-theme #resultCardIndia,body.light-theme .modal-box,body.light-theme .legal-dialog{background:#fff;color:#182036;border-color:#d9dfeb}body.light-theme .review-card,body.light-theme input[type="text"],body.light-theme .paste-button,body.light-theme .header-nav button,body.light-theme .language-select{background:#e9edf5;color:#25324a;border-color:#cbd4e4}body.light-theme .faq-sheet summary{color:#26354d}body.light-theme .faq-sheet details{border-color:#d9dfeb}body.light-theme .badge-container span{background:#edf1f8;color:#34425b;border-color:#d4dce9}body.light-theme .review-card p{color:#34425b}body.light-theme .platform-status span{color:#12684d}body.light-theme #resTitleIndia,body.light-theme #verifyTitleIndia,body.light-theme .modal-box label{color:#25324a!important}
+        @media(max-width:600px){.corporate-header{padding:20px}.header-brand{font-size:19px}.header-nav{gap:12px}.header-nav a{font-size:12px}main{margin-top:30px}.community-panel{padding:20px}.community-heading{align-items:flex-start}.community-panel h2{font-size:15px;line-height:1.5}.review-grid{grid-template-columns:1fr}.site-footer{flex-direction:column;align-items:flex-start;padding:24px 20px}.footer-links{gap:18px}}
+        @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.legal-dialog[open]{animation:none}}
+        .telegram-link,.legal-dialog a{color:#ffb651;text-underline-offset:4px}.feedback-form{display:flex;align-items:stretch;gap:12px}.feedback-form textarea{resize:vertical;flex:1;min-width:0;min-height:70px;border:1px solid #333c50;border-radius:12px;background:#0d1018;color:#e2e8f0;padding:15px;font:inherit;font-size:13px;line-height:1.6}.feedback-form button{margin:0;white-space:nowrap;padding:16px 22px;box-shadow:0 0 25px #ff7b0015}.feedback-form textarea:focus{outline:2px solid #ff7b00;outline-offset:2px}#feedbackStatusIndia{font-size:12px;color:#80d6ac;margin-top:10px}.review-caption{font-size:9px;letter-spacing:1.5px;color:#8d9aaf;margin:25px 0 12px}.review-marquee{overflow:hidden;mask-image:linear-gradient(to right,transparent,#000 5%,#000 95%,transparent);margin-top:10px}.marquee-track{display:flex;width:max-content;animation:reviewsLeft 30s linear infinite}.marquee-track.forward{animation-direction:reverse}.marquee-group{display:flex;gap:12px;padding-right:12px;flex-shrink:0}.marquee-card{width:260px;border:1px solid #2b3244;border-radius:12px;padding:17px;background:#0c1019;color:#aebbd0;font-size:12px;line-height:1.7}.review-marquee:hover .marquee-track,.review-marquee:focus-within .marquee-track{animation-play-state:paused}@keyframes reviewsLeft{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        .cookie-panel{position:fixed;z-index:900;bottom:20px;left:50%;width:min(880px,calc(100% - 32px));border:1px solid #3b4254;border-radius:18px;background:#191d29f5;backdrop-filter:blur(15px);box-shadow:0 15px 70px #0006;padding:20px 24px;display:flex;align-items:center;gap:24px;transform:translate(-50%,140%);opacity:0;transition:transform .4s ease,opacity .25s ease}.cookie-panel.is-visible{transform:translate(-50%,0);opacity:1}.cookie-copy{flex:1}.cookie-copy p{margin:0;font-size:13px;line-height:1.7;color:#d5ddec}.cookie-copy small{display:block;font-size:10px;color:#8e9bb1;margin-top:6px}.cookie-actions{display:flex;gap:9px}.cookie-actions button{margin:0;font-size:12px;padding:12px 15px;white-space:nowrap}.cookie-actions .reject-cookie{background:#242a3a;color:#d5ddec;border:1px solid #3b4254}body.consent-visible{padding-bottom:160px}body.light-theme .feedback-form textarea,body.light-theme .marquee-card{background:#edf1f8;color:#34425b;border-color:#d4dce9}body.light-theme .cookie-panel{background:#fffffff5;border-color:#ccd5e5}body.light-theme .cookie-copy p{color:#34425b}@media(max-width:600px){.feedback-form{flex-direction:column}.cookie-panel{bottom:12px;flex-direction:column;gap:14px;align-items:stretch;padding:18px}.cookie-actions button{flex:1}body.consent-visible{padding-bottom:210px}}@media(prefers-reduced-motion:reduce){.marquee-track{animation:none}.review-marquee{overflow-x:auto}.cookie-panel{transition:none}}
+        /* Unified white capsule: text, clipboard, and download share one frame. */
+        .input-container{display:flex;flex-direction:row;align-items:center;gap:10px;background:#ffffff;padding:8px;border:1px solid #e7edf6;border-radius:50px;box-shadow:0 14px 45px #0003;}
+        .url-entry{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+        .url-entry #mediaUrlIndia,body.light-theme .url-entry #mediaUrlIndia{width:100%;min-width:0;flex:1;border:0;background:transparent;color:#263449;outline:none;border-radius:0;padding:16px 18px;font-size:15px;line-height:24px;box-shadow:none;}
+        #mediaUrlIndia::placeholder{color:#7a8699;opacity:1;}
+        .input-container:focus-within{box-shadow:0 0 0 3px #4169e13d,0 14px 45px #0003;}
+        .input-container #pasteIndia,body.light-theme .input-container #pasteIndia{background:#f1f5f9;color:#475569;border:1px solid #e2e8f0;border-radius:12px;padding:12px 15px;font-size:13px;line-height:22px;}
+        .input-container #pasteIndia:hover{background:#e5ebf3;}
+        .input-container #submitIndia{flex-shrink:0;margin:0;background:linear-gradient(135deg,#4169e1,#2851ca);color:#ffffff;border-radius:40px;padding:16px 28px;font-size:14px;line-height:24px;white-space:nowrap;box-shadow:none;}
+        .input-container #submitIndia:hover{background:linear-gradient(135deg,#365ed4,#2045b8);}
+        @media(max-width:600px){.input-container{flex-direction:row;gap:6px;padding:6px;border-radius:50px;}.url-entry{gap:4px;}.url-entry #mediaUrlIndia{font-size:13px;padding:13px 8px;line-height:20px;}.input-container #pasteIndia{padding:10px 7px;font-size:11px;line-height:20px;border-radius:10px;}.input-container #submitIndia{padding:13px 12px;font-size:12px;line-height:20px;}}
+    </style>
+</head>
+<body>
+    <header class="corporate-header"><a class="header-brand" href="#" aria-label="BharatLoader home">BharatLoader.</a><nav class="header-nav" aria-label="Main navigation"><a href="#faqIndia">FAQ</a><button type="button" id="themeIndia" onclick="toggleThemeIndia()" aria-label="Switch to light theme" aria-pressed="false">🌙</button><select class="language-select" id="languageIndia" aria-label="Language" onchange="changeLanguageIndia(this.value)"><option value="en">EN</option><option value="hi">HI</option></select></nav></header>
+    <main>
+        <div class="hero-kicker"><strong>Surprise Gift In <a href="ADD_YOUR_TELEGRAM_CHANNEL_URL_HERE" class="telegram-link">Telegram</a></strong><!-- Replace href="ADD_YOUR_TELEGRAM_CHANNEL_URL_HERE" before deployment. --></div>
+        <h1 id="heroTitleIndia">Save your favourite moments.</h1>
+        <p class="hero-intro" id="heroIntroIndia">YT, Instagram, Facebook, Moj, ShareChat</p>
+        <div class="input-container">
+            <div class="url-entry">
+                <input type="text" id="mediaUrlIndia" placeholder="Insert your link here" aria-label="Video URL">
+                <button type="button" class="paste-button" id="pasteIndia" onclick="pasteFromClipboard()" aria-label="Paste video link from clipboard">📋 Paste</button>
+            </div>
+            <button id="submitIndia" onclick="showVerification()">Download</button>
+        </div>
+        <div id="clipboardStatusIndia" class="hidden" role="status" aria-live="polite"></div>
+        <div id="requestLoadingIndia" class="hidden" role="status" style="margin-top:25px;"><div class="spinner"></div><p>Video link resolve ho raha hai…</p></div>
+        <div id="errorIndia" class="hidden" role="alert"></div>
+        <!-- 📊 RESULTS CARD -->
+        <div id="resultCardIndia" class="hidden" aria-live="polite">
+            <img id="resThumbnailIndia" alt="Thumbnail" referrerpolicy="no-referrer">
+            <div style="flex: 1;">
+                <div id="resTitleIndia" style="font-weight:bold; color:white; margin-bottom:15px;">Video Found!</div>
+                <a id="downloadBtnIndia" target="_blank" rel="noopener noreferrer">🟢 Gallery Me Save Karein (HD MP4)</a>
+                <p style="font-size:12px;margin:12px 0 0;">Stream khulne par browser ka save option use karein. Kuch streams mein audio alag ho sakta hai.</p>
+            </div>
+        </div>
+        <section class="community-panel feedback-panel" aria-labelledby="feedbackTitleIndia">
+            <h2 id="feedbackTitleIndia">Report an Issue or Leave Feedback</h2>
+            <p class="panel-note">Share your experience. Messages added here stay in this page session.</p>
+            <form id="feedbackFormIndia" class="feedback-form"><textarea id="feedbackInputIndia" aria-label="Report an Issue or Leave Feedback" placeholder="What worked? What could be better?" maxlength="500" required rows="2"></textarea><button type="submit">Send 🚀</button></form>
+            <div id="feedbackStatusIndia" role="status" aria-live="polite"></div>
+            <div class="review-caption">COMMUNITY PREVIEW · SAMPLE REVIEWS</div>
+            <div class="review-marquee" tabindex="0" aria-label="Sample reviews scrolling left to right"><div class="marquee-track forward" id="reviewTrackOneIndia"><div class="marquee-group"><article class="marquee-card">User: YouTube downloads working flawlessly!</article><article class="marquee-card">User: Moj link parsed instantly, love it!</article><article class="marquee-card">User: The Paste button makes it so easy.</article></div><div class="marquee-group" aria-hidden="true"><article class="marquee-card">User: YouTube downloads working flawlessly!</article><article class="marquee-card">User: Moj link parsed instantly, love it!</article><article class="marquee-card">User: The Paste button makes it so easy.</article></div></div></div>
+            <div class="review-marquee" tabindex="0" aria-label="Sample reviews scrolling right to left"><div class="marquee-track reverse"><div class="marquee-group"><article class="marquee-card">User: Clean design, quick results. 🔥</article><article class="marquee-card">User: Love the dark theme on mobile.</article><article class="marquee-card">User: Clear error messages really help.</article></div><div class="marquee-group" aria-hidden="true"><article class="marquee-card">User: Clean design, quick results. 🔥</article><article class="marquee-card">User: Love the dark theme on mobile.</article><article class="marquee-card">User: Clear error messages really help.</article></div></div></div>
+        </section>
+        <!-- Ad Placement Zones -->
+        <!-- Future me aap apna Adsterra Banner code yahan paste kar sakte hain -->
+        <!-- 🏷️ SUPPORTED APPS -->
+        <!-- Ad Placement Zones -->
+        <!-- Future me aap apna Popunder ad code yahan paste kar sakte hain -->
+        <section class="faq-sheet" id="faqIndia" aria-labelledby="faqTitleIndia"><h2 id="faqTitleIndia">A few things worth knowing.</h2><details><summary>How do I download a video?</summary><p>Copy a public video link, use Paste or type it into the field, then select Download Video. Confirm the checkbox and open the returned stream. Use your browser’s save option when available.</p></details><details><summary>Why can an Instagram link fail?</summary><p>Instagram may restrict access based on authentication, the account, or the network. Public links can also fail. Try another accessible link; extraction cannot guarantee access to every video.</p></details><details><summary>Are these videos always HD or watermark-free?</summary><p>Available quality, audio, and watermarks depend on the stream returned by the platform. This app does not remove embedded logos or merge separate audio tracks.</p></details><details><summary>Is the verification checkbox bot protection?</summary><p>It is a manual confirmation step with a short preparation delay. It does not provide CAPTCHA verification or independent security protection.</p></details></section>
+    </main>
+    <footer class="site-footer"><div>© 2026 BharatLoader<sup style="font-size:.65em;line-height:0;">™</sup></div><nav class="footer-links" aria-label="Legal and contact"><a href="#contactIndia" onclick="openLegalIndia('contactIndia');return false;">Contact</a><a href="#privacyIndia" onclick="openLegalIndia('privacyIndia');return false;">Privacy Policy</a><a href="#termsIndia" onclick="openLegalIndia('termsIndia');return false;">Terms &amp; Conditions</a></nav></footer>
+    <dialog class="legal-dialog" id="contactIndia" aria-labelledby="contactTitleIndia"><div class="legal-label">GET IN TOUCH</div><h2 id="contactTitleIndia">Contact BharatLoader</h2><p>Contact us by email: <a href="mailto:ADD_YOUR_BUSINESS_EMAIL_HERE">[Your Email Link]</a><!-- Replace href="mailto:ADD_YOUR_BUSINESS_EMAIL_HERE" before deployment. --></p><button type="button" onclick="closeLegalIndia('contactIndia')">Close [X]</button></dialog>
+    <dialog class="legal-dialog" id="privacyIndia" aria-labelledby="privacyTitleIndia"><div class="legal-label">PRIVACY POLICY · DRAFT</div><h2 id="privacyTitleIndia">Your links. Your privacy.</h2><p>BharatLoader does not maintain a database of pasted links, downloaded clips, or extracted media metadata. It does not intentionally cache media files or maintain a personal viewing-history profile. Links are processed to resolve streams, and platform requests are made by the server.</p><p>Clipboard access happens only when you press Paste. Only the submitted link is sent to the local backend. Platform and thumbnail servers receive requests needed to provide the video preview and stream.</p><p>Runtime and extractor error logs can contain URLs and technical metadata. This app therefore does not promise that no link or metadata ever appears in logs. Hosting and third-party logging policies must be reviewed before public launch.</p><button type="button" onclick="closeLegalIndia('privacyIndia')">Close [X]</button></dialog>
+    <dialog class="legal-dialog" id="termsIndia" aria-labelledby="termsTitleIndia"><div class="legal-label">TERMS &amp; CONDITIONS · DRAFT</div><h2 id="termsTitleIndia">Use responsibly.</h2><p>Use this utility only for personal offline viewing of content you own or have permission to download. Respect creator rights, applicable laws, and the source platform’s terms.</p><p>Commercial redistribution, resale, and unauthorized reposting are restricted. Do not use the tool to evade access controls, obtain private content without permission, or overload platform services.</p><p>Availability, stream quality, and successful downloads are not guaranteed. These are placeholder terms for review before public launch.</p><button type="button" onclick="closeLegalIndia('termsIndia')">Close [X]</button></dialog>
+    <!-- 🔒 HUMAN VERIFICATION MODAL -->
+    <div id="verifyModal" class="modal-overlay hidden">
+        <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="verifyTitleIndia">
+            <h3 id="verifyTitleIndia" style="margin:0; color:white;">Security Verification</h3>
+            <p style="font-size:0.9rem; margin-bottom:15px; color:#94a3b8;">Please check the box below to secure your download stream link tracks.</p>
+            <div class="checkbox-row" id="checkboxContainer">
+                <input type="checkbox" id="humanCheck" style="width:20px; height:20px; cursor:pointer;" onclick="triggerVerification()">
+                <label for="humanCheck" style="cursor:pointer; color:#cbd5e1;">I am not a robot</label>
+            </div>
+            <div id="modalLoading" class="hidden">
+                <div class="spinner"></div>
+                <div style="color:#ff7b00; font-size:0.85rem; margin-top:8px; font-family:monospace;">Generating final secure download nodes...</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let pendingUrlIndia = '', verificationTimerIndia = null;
+        async function pasteFromClipboard() {
+            const button = document.getElementById('pasteIndia');
+            const status = document.getElementById('clipboardStatusIndia');
+            const input = document.getElementById('mediaUrlIndia');
+            if(button.disabled) return;
+            button.disabled = true;
+            status.classList.remove('hidden');
+            status.textContent = 'Clipboard se link paste ho raha hai…';
+            try {
+                if(!navigator.clipboard || typeof navigator.clipboard.readText !== 'function') {
+                    throw new Error('clipboard-unavailable');
+                }
+                const text = (await navigator.clipboard.readText()).trim();
+                if(!text) { status.textContent = 'Clipboard khali hai. Pehle video link copy karein.'; return; }
+                if(text.length > 500) { status.textContent = 'Link bahut lamba hai. Maximum 500 characters allowed hain.'; return; }
+                input.value = text;
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+                status.textContent = 'Link Pasted Successfully';
+                input.focus();
+            } catch(error) {
+                status.textContent = 'Clipboard access nahi mila. Browser permission allow karein, ya keyboard ka Paste option use karein.';
+            } finally {
+                button.disabled = false;
+            }
+        }
+        function showVerification() {
+            const urlInput = document.getElementById('mediaUrlIndia').value.trim();
+            if(!urlInput) { alert("Pehle link daalna zaroori hai!"); return; }
+            if(document.getElementById('submitIndia').disabled) return;
+            pendingUrlIndia = urlInput;
+            document.getElementById('submitIndia').disabled = true;
+            document.getElementById('errorIndia').classList.add('hidden');
+            document.getElementById('resultCardIndia').classList.add('hidden');
+            document.getElementById('verifyModal').classList.remove('hidden');
+            document.getElementById('humanCheck').checked = false;
+            document.getElementById('humanCheck').disabled = false;
+            document.getElementById('checkboxContainer').classList.remove('hidden');
+            document.getElementById('modalLoading').classList.add('hidden');
+            document.getElementById('humanCheck').focus();
+        }
+        function triggerVerification() {
+            if(!document.getElementById('humanCheck').checked || verificationTimerIndia !== null) return;
+            document.getElementById('humanCheck').disabled = true;
+            document.getElementById('checkboxContainer').classList.add('hidden');
+            document.getElementById('modalLoading').classList.remove('hidden');
+            verificationTimerIndia = setTimeout(() => { verificationTimerIndia = null; executeDownload(); }, 2000);
+        }
+        function safeMediaUrlIndia(value) {
+            try { const url = new URL(value); return ['https:', 'http:'].includes(url.protocol) ? url.href : null; } catch { return null; }
+        }
+        async function executeDownload() {
+            document.getElementById('verifyModal').classList.add('hidden');
+            const resultCard = document.getElementById('resultCardIndia');
+            resultCard.classList.add('hidden');
+            document.getElementById('requestLoadingIndia').classList.remove('hidden');
+            const controller = new AbortController();
+            const timeout = setTimeout(() => controller.abort(), 120000);
+            try {
+                const response = await fetch('/api/download', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: pendingUrlIndia }), signal: controller.signal
+                });
+                const data = await response.json();
+                if(!response.ok || data.status !== "success") {
+                    throw new Error(typeof data.detail === 'string' ? data.detail : 'Video link resolve nahi hua.');
+                }
+                const stream = safeMediaUrlIndia(data.download_url);
+                if(!stream) throw new Error('Valid download URL nahi mila.');
+                document.getElementById('resTitleIndia').textContent = data.title || 'BharatLoader Video';
+                const thumbnail = document.getElementById('resThumbnailIndia');
+                const image = safeMediaUrlIndia(data.thumbnail_url);
+                thumbnail.classList.toggle('hidden', !image);
+                thumbnail.removeAttribute('src');
+                if(image) thumbnail.src = image;
+                thumbnail.onerror = () => thumbnail.classList.add('hidden');
+                document.getElementById('downloadBtnIndia').href = stream;
+                resultCard.classList.remove('hidden');
+                resultCard.scrollIntoView({ behavior:'smooth', block:'nearest' });
+            } catch(error) {
+                const errorBox = document.getElementById('errorIndia');
+                errorBox.textContent = error.name === 'AbortError' ? 'Request timeout ho gaya. Dobara try karein.' : error.message;
+                errorBox.classList.remove('hidden');
+            } finally {
+                clearTimeout(timeout);
+                document.getElementById('requestLoadingIndia').classList.add('hidden');
+                document.getElementById('submitIndia').disabled = false;
+            }
+        }
+        document.addEventListener('keydown', event => {
+            if(event.key === 'Escape' && !document.getElementById('verifyModal').classList.contains('hidden')) {
+                clearTimeout(verificationTimerIndia); verificationTimerIndia = null;
+                document.getElementById('verifyModal').classList.add('hidden');
+                document.getElementById('submitIndia').disabled = false;
+                document.getElementById('submitIndia').focus();
+            }
+        });
+    </script>
+    <script>
+        function toggleThemeIndia(){const light=document.body.classList.toggle('light-theme');const button=document.getElementById('themeIndia');button.textContent=light?'☀️':'🌙';button.setAttribute('aria-pressed',String(light));button.setAttribute('aria-label',light?'Switch to dark theme':'Switch to light theme');}
+        function changeLanguageIndia(value){document.documentElement.lang=value;document.getElementById('heroTitleIndia').textContent=value==='hi'?'Apne favourite moments save karein.':'Save your favourite moments.';document.getElementById('heroIntroIndia').textContent='YT, Instagram, Facebook, Moj, ShareChat';document.getElementById('submitIndia').textContent='Download';document.getElementById('mediaUrlIndia').placeholder='Insert your link here';}
+        function openLegalIndia(id){document.getElementById(id).showModal();}
+        function closeLegalIndia(id){document.getElementById(id).close();}
+        document.querySelectorAll('.legal-dialog').forEach(dialog=>dialog.addEventListener('click',event=>{const rect=dialog.getBoundingClientRect();if(event.target===dialog&&(event.clientX<rect.left||event.clientX>rect.right||event.clientY<rect.top||event.clientY>rect.bottom))dialog.close();}));
+        window.addEventListener('contextmenu', e => e.preventDefault());
+        window.addEventListener('keydown', e => {
+            const key = e.key.toLowerCase();
+            if (key === 'f12' || (e.ctrlKey && e.shiftKey && (key === 'i' || key === 'j')) || (e.ctrlKey && key === 'u')) {
+                e.preventDefault();
+                e.stopImmediatePropagation();
+            }
+        }, true);
+        document.getElementById('mediaUrlIndia').maxLength = 500;
+    </script>
+    <aside id="cookiePanelIndia" class="cookie-panel hidden" aria-label="Cookie preferences"><div class="cookie-copy"><p>We use cookies to ensure optimal video extraction experiences.</p><small>This demo saves only your preference locally; extraction cookies are not enabled.</small></div><div class="cookie-actions"><button type="button" onclick="chooseCookiesIndia('accepted')">Accept Cookies</button><button type="button" class="reject-cookie" onclick="chooseCookiesIndia('rejected')">Reject</button></div></aside>
+    <script>
+        const smartInputIndia=document.getElementById('mediaUrlIndia');
+        const smartButtonIndia=document.getElementById('pasteIndia');
+        function syncInputActionIndia(){
+            const clear=smartInputIndia.value.length>0;
+            smartButtonIndia.textContent=clear?'❌ Clear':'📋 Paste';
+            smartButtonIndia.setAttribute('aria-label',clear?'Clear video link':'Paste video link from clipboard');
+            smartButtonIndia.onclick=clear?clearInputIndia:pasteFromClipboard;
+        }
+        function clearInputIndia(){smartInputIndia.value='';smartInputIndia.dispatchEvent(new Event('input',{bubbles:true}));document.getElementById('clipboardStatusIndia').classList.add('hidden');smartInputIndia.focus();}
+        smartInputIndia.addEventListener('input',syncInputActionIndia);
+        syncInputActionIndia();
+        function stripFeedbackLinksIndia(message){
+            return message.replace(/\bhttps?:[^\s]*|\bwww\.?[^\s]*|\b(?:[a-z0-9-]+\.)+(?:com|in|net|org|io|co|edu|gov|app|dev|me|xyz|info|biz|online|site|tv)\b(?:[^\s]*)?|\.(?:com|in|net|org|io|co|edu|gov|app|dev|me|xyz|info|biz|online|site|tv)\b|\bhttps?\b/gi,'');
+        }
+        function feedbackErrorIndia(message){
+            if(message.trim().split(/\s+/).filter(Boolean).length>30)return 'Word limit exceeded (Max 30 words)';
+            if(/https?\b|www\b|\.(?:com|in|net|org|io|co|edu|gov|app|dev|me|xyz|info|biz|online|site|tv)(?=$|[^a-z])/i.test(message))return 'Links are not allowed in feedback. Please remove URLs or domain names.';
+            return '';
+        }
+        const feedbackInputIndia=document.getElementById('feedbackInputIndia');
+        const feedbackSendIndia=document.querySelector('#feedbackFormIndia button[type="submit"]');
+        function validateFeedbackIndia(){
+            const original=feedbackInputIndia.value;
+            const cleaned=stripFeedbackLinksIndia(original);
+            const removed=original!==cleaned;
+            if(removed){const position=feedbackInputIndia.selectionStart;feedbackInputIndia.value=cleaned;const adjusted=Math.max(0,position-(original.length-cleaned.length));feedbackInputIndia.setSelectionRange(adjusted,adjusted);}
+            const error=feedbackErrorIndia(feedbackInputIndia.value);
+            const status=document.getElementById('feedbackStatusIndia');
+            status.textContent=error||(removed?'Links were removed from your feedback.':'');status.style.color=error||removed?'#ffb39b':'#80d6ac';
+            feedbackInputIndia.setAttribute('aria-invalid',String(Boolean(error)));
+            feedbackSendIndia.disabled=Boolean(error);
+            return !error;
+        }
+        feedbackInputIndia.setAttribute('aria-describedby','feedbackStatusIndia');
+        feedbackInputIndia.addEventListener('input',validateFeedbackIndia);
+        document.getElementById('feedbackFormIndia').addEventListener('submit',event=>{
+            event.preventDefault();if(!validateFeedbackIndia())return;const input=feedbackInputIndia;const message=input.value.trim();if(!message)return;
+            const groups=document.querySelectorAll('#reviewTrackOneIndia .marquee-group');
+            groups.forEach(group=>{const card=document.createElement('article');card.className='marquee-card';card.textContent='You (local): '+message;group.prepend(card);while(group.children.length>6)group.lastElementChild.remove();});
+            input.value='';document.getElementById('feedbackStatusIndia').textContent='Added to this page session. This message has not been sent to support.';
+        });
+        const cookiePanelIndia=document.getElementById('cookiePanelIndia');
+        let savedConsentIndia=null;
+        try{savedConsentIndia=localStorage.getItem('bharatloaderConsent');}catch(error){}
+        if(!['accepted','rejected'].includes(savedConsentIndia)){cookiePanelIndia.classList.remove('hidden');document.body.classList.add('consent-visible');requestAnimationFrame(()=>requestAnimationFrame(()=>cookiePanelIndia.classList.add('is-visible')));}
+        function chooseCookiesIndia(choice){try{localStorage.setItem('bharatloaderConsent',choice);}catch(error){}cookiePanelIndia.classList.remove('is-visible');document.body.classList.remove('consent-visible');setTimeout(()=>cookiePanelIndia.classList.add('hidden'),400);}
+    </script>
+</body>
+</html>
