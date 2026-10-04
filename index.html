@@ -63,7 +63,7 @@
     </style>
 </head>
 <body>
-    <header class="corporate-header"><a class="header-brand" href="#" aria-label="BharatLoader home">BharatLoader.</a><nav class="header-nav" aria-label="Main navigation"><a href="#faqIndia">FAQ</a><button type="button" id="themeIndia" onclick="toggleThemeIndia()" aria-label="Switch to light theme" aria-pressed="false">🌙</button><select class="language-select" id="languageIndia" aria-label="Language" onchange="changeLanguageIndia(this.value)"><option value="en">EN</option><option value="hi">HI</option></select></nav></header>
+    <header class="corporate-header"><a class="header-brand" href="#" aria-label="BharatLoader home">BharatLoader.</a><nav class="header-nav" aria-label="Main navigation"><a href="#faqIndia">FAQ</a><button type="button" id="themeIndia" onclick="toggleThemeIndia()" aria-label="Switch to light theme" aria-pressed="false">🌙</button><select class="language-select" id="languageIndia" aria-label="Language" onchange="changeLanguageIndia(this.value)"><option value="en">EN</option></select></nav></header>
     <main>
         <div class="hero-kicker"><strong>Surprise Gift In <a href="ADD_YOUR_TELEGRAM_CHANNEL_URL_HERE" class="telegram-link">Telegram</a></strong><!-- Replace href="ADD_YOUR_TELEGRAM_CHANNEL_URL_HERE" before deployment. --></div>
         <h1 id="heroTitleIndia">Save your favourite moments.</h1>
@@ -77,14 +77,14 @@
             <button id="submitIndia" onclick="showVerification()">Download</button>
         </div>
         <div id="clipboardStatusIndia" class="hidden" role="status" aria-live="polite"></div>
-        <div id="requestLoadingIndia" class="hidden" role="status" style="margin-top:25px;"><div class="spinner"></div><p>Video link resolve ho raha hai…</p></div>
+        <div id="requestLoadingIndia" class="hidden" role="status" style="margin-top:25px;"><div class="spinner"></div><p>Video link resolveing…</p></div>
         <div id="errorIndia" class="hidden" role="alert"></div>
         <!-- 📊 RESULTS CARD -->
         <div id="resultCardIndia" class="hidden" aria-live="polite">
             <img id="resThumbnailIndia" alt="Thumbnail" referrerpolicy="no-referrer">
             <div style="flex: 1;">
                 <div id="resTitleIndia" style="font-weight:bold; color:white; margin-bottom:15px;">Video Found!</div>
-                <a id="downloadBtnIndia" target="_blank" rel="noopener noreferrer">🟢 Gallery Me Save Karein (HD MP4)</a>
+                <a id="downloadBtnIndia" target="_blank" rel="noopener noreferrer">Download</a>
                 <p style="font-size:12px;margin:12px 0 0;">Stream khulne par browser ka save option use karein. Kuch streams mein audio alag ho sakta hai.</p>
             </div>
         </div>
